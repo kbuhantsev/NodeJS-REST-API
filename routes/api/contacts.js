@@ -34,11 +34,35 @@ router.post("/", async (req, res, next) => {
 });
 
 router.delete("/:contactId", async (req, res, next) => {
-  res.json({ message: "template message" });
+  const contact = await getContactById(req.params.contactId);
+  if (contact) {
+    const result = await removeContact(contact.id);
+    if (result) {
+      res.json({ message: "contact deleted" });
+    } else {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  } else {
+    res.status(404).json({ message: "Not found" });
+  }
 });
 
 router.put("/:contactId", async (req, res, next) => {
-  res.json({ message: "template message" });
+  if (!Object.keys(req.body).length) {
+    res.status(400).json({ message: "missing fields" });
+  }
+
+  const contact = await getContactById(req.params.contactId);
+  if (contact) {
+    const updatedContact = await updateContact(contact.id, req.body);
+    if (updatedContact) {
+      res.json(updatedContact);
+    } else {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  } else {
+    res.status(404).json({ message: "Not found" });
+  }
 });
 
 module.exports = router;
