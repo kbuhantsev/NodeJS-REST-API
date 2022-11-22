@@ -12,6 +12,7 @@ const router = express.Router();
 
 const regExp =
   /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/;
+
 const addContactSchema = Joi.object({
   name: Joi.string().min(2).required(),
   email: Joi.string().email({ minDomainSegments: 2 }).required(),
@@ -29,22 +30,12 @@ const updateContactSchema = Joi.object({
     .error(new Error("phone number is not valid!")),
 }).min(1);
 
-router.get("/", async (_, res) => {
+const allContacts = async (_, res) => {
   const contacts = await listContacts();
   res.json(contacts);
-});
+};
 
-router.get("/:contactId", async (req, res) => {
-  const { contactId } = req.params;
-  const contact = await getContactById(contactId);
-  if (contact) {
-    res.json(contact);
-  } else {
-    res.status(404).json({ message: "Not found" });
-  }
-});
-
-router.post("/", async (req, res) => {
+const newContact = async (req, res) => {
   const { value, error } = addContactSchema.validate(req.body);
   if (error) {
     res.status(404).json({ message: error.message });
@@ -57,9 +48,19 @@ router.post("/", async (req, res) => {
   } else {
     res.status(500).json({ message: "Internal Server Error" });
   }
-});
+};
 
-router.delete("/:contactId", async (req, res) => {
+const contactById = async (req, res) => {
+  const { contactId } = req.params;
+  const contact = await getContactById(contactId);
+  if (contact) {
+    res.json(contact);
+  } else {
+    res.status(404).json({ message: "Not found" });
+  }
+};
+
+const deleteContact = async (req, res) => {
   const contact = await getContactById(req.params.contactId);
   if (contact) {
     const result = await removeContact(contact.id);
@@ -71,9 +72,9 @@ router.delete("/:contactId", async (req, res) => {
   } else {
     res.status(404).json({ message: "Not found" });
   }
-});
+};
 
-router.put("/:contactId", async (req, res) => {
+const putContact = async (req, res) => {
   const { value, error } = updateContactSchema.validate(req.body);
   if (error) {
     res.status(404).json({ message: error.message });
@@ -91,6 +92,15 @@ router.put("/:contactId", async (req, res) => {
   } else {
     res.status(404).json({ message: "Not found" });
   }
-});
+};
+
+router
+  .get("/", allContacts) //
+  .post("/", newContact);
+
+router
+  .get("/:contactId", contactById)
+  .delete("/:contactId", deleteContact)
+  .put("/:contactId", putContact);
 
 module.exports = router;
