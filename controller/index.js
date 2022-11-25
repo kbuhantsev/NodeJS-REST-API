@@ -21,7 +21,7 @@ const allContacts = async (_, res) => {
 const newContact = async (req, res) => {
   const { value, error } = addContactSchema.validate(req.body);
   if (error) {
-    res.status(404).json({ message: error.message });
+    res.status(400).json({ message: error.message });
     return;
   }
 
@@ -56,7 +56,7 @@ const deleteContact = async (req, res) => {
 const putContact = async (req, res) => {
   const { value, error } = updateContactSchema.validate(req.body);
   if (error) {
-    res.status(404).json({ message: error.message });
+    res.status(400).json({ message: error.message });
     return;
   }
 
@@ -72,7 +72,7 @@ const putContact = async (req, res) => {
 const patchFavorite = async (req, res) => {
   const { value, error } = patchFavoriteSchema.validate(req.body);
   if (error) {
-    res.status(404).json({ message: error.message });
+    res.status(400).json({ message: error.message });
     return;
   }
   const { contactId } = req.params;
