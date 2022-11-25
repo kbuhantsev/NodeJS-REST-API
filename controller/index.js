@@ -4,9 +4,14 @@ const {
   removeContact,
   addContact,
   updateContact,
-} = require("../models/contacts");
+  updateStatusContact,
+} = require("../service");
 
-const { addContactSchema, updateContactSchema } = require("../schemas");
+const {
+  addContactSchema, //
+  updateContactSchema,
+  patchFavoriteSchema,
+} = require("../schemas");
 
 const allContacts = async (_, res) => {
   const contacts = await listContacts();
@@ -39,14 +44,10 @@ const contactById = async (req, res) => {
 };
 
 const deleteContact = async (req, res) => {
-  const contact = await getContactById(req.params.contactId);
-  if (contact) {
-    const result = await removeContact(contact.id);
-    if (result) {
-      res.json({ message: "contact deleted" });
-    } else {
-      res.status(500).json({ message: "Internal Server Error" });
-    }
+  const { contactId } = req.params;
+  const { deletedCount } = await removeContact(contactId);
+  if (deletedCount) {
+    res.json({ message: "contact deleted" });
   } else {
     res.status(404).json({ message: "Not found" });
   }
@@ -59,14 +60,25 @@ const putContact = async (req, res) => {
     return;
   }
 
-  const contact = await getContactById(req.params.contactId);
-  if (contact) {
-    const updatedContact = await updateContact(contact.id, value);
-    if (updatedContact) {
-      res.json(updatedContact);
-    } else {
-      res.status(500).json({ message: "Internal Server Error" });
-    }
+  const { contactId } = req.params;
+  const updatedContact = await updateContact(contactId, value);
+  if (updatedContact) {
+    res.json(updatedContact);
+  } else {
+    res.status(404).json({ message: "Not found" });
+  }
+};
+
+const patchFavorite = async (req, res) => {
+  const { value, error } = patchFavoriteSchema.validate(req.body);
+  if (error) {
+    res.status(404).json({ message: error.message });
+    return;
+  }
+  const { contactId } = req.params;
+  const updatedContact = await updateStatusContact(contactId, value);
+  if (updatedContact) {
+    res.json(updatedContact);
   } else {
     res.status(404).json({ message: "Not found" });
   }
@@ -78,4 +90,5 @@ module.exports = {
   contactById,
   deleteContact,
   putContact,
+  patchFavorite,
 };
