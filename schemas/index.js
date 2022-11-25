@@ -23,7 +23,7 @@ const updateContactSchema = Joi.object({
 }).min(1);
 
 const patchFavoriteSchema = Joi.object({
-  favorite: Joi.boolean().required(),
+  favorite: Joi.boolean().required().error(new Error("missing field favorite")),
 }).max(1);
 
 module.exports = {
