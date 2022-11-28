@@ -8,7 +8,7 @@ const {
   deleteContact,
   putContact,
   patchFavorite,
-} = require("../../controller");
+} = require("../../controllers");
 
 router
   .get("/", allContacts) //
