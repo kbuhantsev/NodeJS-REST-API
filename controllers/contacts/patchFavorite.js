@@ -1,4 +1,4 @@
-const { updateStatusContact } = require("../../service");
+const { updateStatusContact } = require("../../service/contacts");
 
 const { patchFavoriteSchema } = require("../../schemas");
 

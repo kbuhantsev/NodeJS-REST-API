@@ -1,4 +1,4 @@
-const { removeContact } = require("../../service");
+const { removeContact } = require("../../service/contacts");
 
 const deleteContact = async (req, res) => {
   const { contactId } = req.params;

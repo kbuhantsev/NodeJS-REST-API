@@ -1,4 +1,4 @@
-const { updateContact } = require("../../service");
+const { updateContact } = require("../../service/contacts");
 
 const { updateContactSchema } = require("../../schemas");
 
