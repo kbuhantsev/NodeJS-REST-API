@@ -18,6 +18,4 @@ const putContact = async (req, res) => {
   }
 };
 
-module.exports = {
-  putContact,
-};
+module.exports = putContact;

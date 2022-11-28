@@ -4,6 +4,4 @@ const listContacts = async () => {
   return await Contact.find({});
 };
 
-module.exports = {
-  listContacts,
-};
+module.exports = listContacts;

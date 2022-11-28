@@ -10,6 +10,4 @@ const contactById = async (req, res) => {
   }
 };
 
-module.exports = {
-  contactById,
-};
+module.exports = contactById;

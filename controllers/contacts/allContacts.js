@@ -5,6 +5,4 @@ const allContacts = async (_, res) => {
   res.json(contacts);
 };
 
-module.exports = {
-  allContacts,
-};
+module.exports = allContacts;

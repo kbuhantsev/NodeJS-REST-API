@@ -17,6 +17,4 @@ const patchFavorite = async (req, res) => {
   }
 };
 
-module.exports = {
-  patchFavorite,
-};
+module.exports = patchFavorite;

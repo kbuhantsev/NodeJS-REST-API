@@ -8,6 +8,4 @@ const updateStatusContact = async (contactId, { favorite }) => {
   );
 };
 
-module.exports = {
-  updateStatusContact,
-};
+module.exports = updateStatusContact;

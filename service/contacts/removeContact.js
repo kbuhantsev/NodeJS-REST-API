@@ -4,6 +4,4 @@ const removeContact = async (contactId) => {
   return await Contact.deleteOne({ _id: contactId });
 };
 
-module.exports = {
-  removeContact,
-};
+module.exports = removeContact;

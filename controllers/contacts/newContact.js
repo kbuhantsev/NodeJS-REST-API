@@ -17,6 +17,4 @@ const newContact = async (req, res) => {
   }
 };
 
-module.exports = {
-  newContact,
-};
+module.exports = newContact;

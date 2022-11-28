@@ -4,6 +4,4 @@ const getContactById = async (contactId) => {
   return await Contact.findOne({ _id: contactId });
 };
 
-module.exports = {
-  getContactById,
-};
+module.exports = getContactById;
