@@ -4,11 +4,7 @@ const router = express.Router();
 const { contacts: ctrl } = require("../../controllers");
 
 const { ctrlWrapper, validator } = require("../../middlewares");
-const {
-  addContactSchema,
-  patchFavoriteSchema,
-  updateContactSchema,
-} = require("../../schemas");
+const { addContactSchema, patchFavoriteSchema } = require("../../schemas");
 
 router
   .get("/", ctrlWrapper(ctrl.allContacts)) //
@@ -17,15 +13,11 @@ router
 router
   .get("/:contactId", ctrlWrapper(ctrl.contactById))
   .delete("/:contactId", ctrlWrapper(ctrl.deleteContact))
+  .put("/:contactId", validator(addContactSchema), ctrlWrapper(ctrl.putContact))
   .patch(
     "/:contactId/favorite",
     validator(patchFavoriteSchema),
     ctrlWrapper(ctrl.patchFavorite)
-  )
-  .put(
-    "/:contactId",
-    validator(updateContactSchema),
-    ctrlWrapper(ctrl.putContact)
   );
 
 module.exports = router;
