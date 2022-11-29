@@ -4,7 +4,10 @@ const router = express.Router();
 const { contacts: ctrl } = require("../../controllers");
 
 const { ctrlWrapper, validator, isValidId } = require("../../middlewares");
-const { addContactSchema, patchFavoriteSchema } = require("../../schemas");
+const {
+  addContactSchema,
+  patchFavoriteSchema,
+} = require("../../models/contact");
 
 router
   .get("/", ctrlWrapper(ctrl.allContacts)) //
