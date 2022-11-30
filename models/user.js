@@ -1,6 +1,7 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
 const { emailRegexp } = require("../config/regExps");
+const bCrypt = require("bcryptjs");
 
 const USER_SUBSCRIPTION = ["starter", "pro", "business"];
 
@@ -29,6 +30,14 @@ const user = Schema(
   },
   { versionKey: false, timestamps: true }
 );
+
+user.methods.setPassword = function (password) {
+  this.password = bCrypt.hashSync(password, bCrypt.genSaltSync(10));
+};
+
+user.methods.validPassword = function (password) {
+  return bCrypt.compareSync(password, this.password);
+};
 
 const User = model("user", user);
 

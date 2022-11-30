@@ -1,6 +1,7 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
+const qs = require("qs");
 
 require("dotenv").config();
 
@@ -8,6 +9,10 @@ const contactsRouter = require("./routes/api/contacts");
 const usersRouter = require("./routes/api/users");
 
 const app = express();
+
+app.set("query parser", function (str) {
+  return qs.parse(str, { ignoreQueryPrefix: true });
+});
 
 const formatsLogger = app.get("env") === process.env.NODE_ENV ? "dev" : "short";
 

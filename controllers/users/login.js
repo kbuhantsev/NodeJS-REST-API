@@ -8,7 +8,7 @@ const login = async (req, res) => {
     throw Unauthorized("Email is wrong");
   }
 
-  if (user.password !== password) {
+  if (!user.validPassword(password)) {
     throw Unauthorized("Password is wrong");
   }
   res.json({

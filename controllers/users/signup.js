@@ -7,7 +7,10 @@ const signup = async (req, res) => {
   if (user) {
     throw Conflict("Email in use");
   }
-  const newUser = await User.create({ email, password });
+
+  const newUser = new User({ email });
+  newUser.setPassword(password);
+  await newUser.save();
   res.status(201).json({
     user: { email: newUser.email, subscription: newUser.subscription },
   });
