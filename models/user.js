@@ -47,13 +47,20 @@ const addUserSchema = Joi.object({
   }),
   email: Joi.string().pattern(emailRegexp).required().messages({
     "any.required": "email is required!",
-    "string.pattern.base": `email {{email}} is not valid!`,
+    "string.pattern.base": "email {{email}} is not valid!",
   }),
-  subscription: Joi.string().valueOf(...USER_SUBSCRIPTION),
+  subscription: Joi.string().valid(...USER_SUBSCRIPTION),
   token: Joi.string(),
+});
+
+const patchSubscriptionSchema = Joi.object({
+  subscription: Joi.string()
+    .valid(...USER_SUBSCRIPTION)
+    .required(),
 });
 
 module.exports = {
   User,
   addUserSchema,
+  patchSubscriptionSchema,
 };
