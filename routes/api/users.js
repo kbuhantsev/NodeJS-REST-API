@@ -7,9 +7,11 @@ const { ctrlWrapper, validator } = require("../../middlewares");
 const { addUserSchema } = require("../../models/user");
 
 router
-  .post("/signup", validator(addUserSchema), ctrlWrapper(ctrl.signup))
-  .post("/login", validator(addUserSchema), ctrlWrapper(ctrl.login))
   .get("/logout", ctrlWrapper(ctrl.logout))
-  .post("/current", ctrlWrapper(ctrl.current));
+  .get("/current", ctrlWrapper(ctrl.current));
+
+router
+  .post("/signup", validator(addUserSchema), ctrlWrapper(ctrl.signup))
+  .post("/login", validator(addUserSchema), ctrlWrapper(ctrl.login));
 
 module.exports = router;
