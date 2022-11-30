@@ -8,8 +8,8 @@ const { addUserSchema } = require("../../models/user");
 
 router
   .post("/signup", validator(addUserSchema), ctrlWrapper(ctrl.signup))
-  .post("/login", ctrlWrapper(ctrl.login))
-  .post("/logout", ctrlWrapper(ctrl.logout))
+  .post("/login", validator(addUserSchema), ctrlWrapper(ctrl.login))
+  .get("/logout", ctrlWrapper(ctrl.logout))
   .post("/current", ctrlWrapper(ctrl.current));
 
 module.exports = router;

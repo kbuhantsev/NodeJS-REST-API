@@ -1,7 +1,6 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
 const { emailRegexp } = require("../config/regExps");
-const { string } = require("joi");
 
 const USER_SUBSCRIPTION = ["starter", "pro", "business"];
 
@@ -9,7 +8,7 @@ const user = Schema(
   {
     password: {
       type: String,
-      minlength: 6,
+      minlength: 5,
       required: [true, "Password is required"],
     },
     email: {
@@ -34,8 +33,8 @@ const user = Schema(
 const User = model("user", user);
 
 const addUserSchema = Joi.object({
-  password: Joi.string().min(6).required().messages({
-    "string.min": "password requires min 6 characters",
+  password: Joi.string().min(5).required().messages({
+    "string.min": "password requires min 5 characters",
   }),
   email: Joi.string().pattern(emailRegexp).required().messages({
     "any.required": "email is required!",
