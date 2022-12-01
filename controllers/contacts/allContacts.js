@@ -14,7 +14,7 @@ const allContacts = async (req, res) => {
     ...favoriteFilter,
   })
     .skip(skip)
-    .limit(limit);
+    .limit(Number(limit));
   res.json(contacts);
 };
 

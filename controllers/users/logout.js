@@ -7,13 +7,10 @@ const logout = async (req, res) => {
   }
 
   const userId = req.user._id;
-  const user = await User.findById(userId);
+  const user = await User.findByIdAndUpdate(userId, { token: null });
   if (!user) {
     throw new Unauthorized(`User by id ${userId} not found!`);
   }
-
-  user.token = null;
-  await user.save();
 
   res.status(204).send();
 };
