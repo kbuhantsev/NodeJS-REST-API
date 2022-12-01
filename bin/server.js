@@ -1,12 +1,11 @@
 const app = require("../app");
 const mongoose = require("mongoose");
 
-const PORT = process.env.APP_PORT || 3000;
-const uriDb = process.env.DB_HOST;
+const { PORT = 3000, DB_HOST = "" } = process.env;
 
 mongoose.Promise = global.Promise;
 
-const connection = mongoose.connect(uriDb, {
+const connection = mongoose.connect(DB_HOST, {
   autoIndex: true,
 });
 
