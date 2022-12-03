@@ -8,7 +8,9 @@ const auth = async (req, _, next) => {
   const bearerToken = req.headers.authorization;
   if (!bearerToken) throw new Unauthorized("Missing Bearer token");
 
-  const token = bearerToken.split(" ")[1];
+  const [bearer, token] = bearerToken.split(" ");
+  if (bearer !== "Bearer") throw new Unauthorized("Missing Bearer token");
+
   try {
     const result = jwt.verify(token, SECRET_KEY);
     const user = await User.findById(result.id, "email subscription");
