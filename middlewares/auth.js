@@ -5,10 +5,10 @@ const { Unauthorized } = require("http-errors");
 const SECRET_KEY = process.env.SECRET_KEY;
 
 const auth = async (req, _, next) => {
-  const bearerToken = req.headers.authorization;
-  if (!bearerToken) throw new Unauthorized("Missing Bearer token");
+  const { authorization = "" } = req.headers.authorization;
+  if (!authorization) throw new Unauthorized("Missing Bearer token");
 
-  const [bearer, token] = bearerToken.split(" ");
+  const [bearer, token] = authorization.split(" ");
   if (bearer !== "Bearer") throw new Unauthorized("Missing Bearer token");
 
   try {
