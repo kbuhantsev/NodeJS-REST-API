@@ -2,6 +2,7 @@ const { Schema, model } = require("mongoose");
 const Joi = require("joi");
 const { emailRegexp } = require("../config/regExps");
 const bCrypt = require("bcryptjs");
+const gravatar = require("gravatar");
 
 const USER_SUBSCRIPTION = ["starter", "pro", "business"];
 
@@ -27,6 +28,10 @@ const user = Schema(
       type: String,
       default: null,
     },
+    avatarURL: {
+      type: String,
+      default: null,
+    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -37,6 +42,14 @@ user.methods.setPassword = function (password) {
 
 user.methods.validPassword = function (password) {
   return bCrypt.compareSync(password, this.password);
+};
+
+user.methods.setDefaultAvatar = function (email) {
+  try {
+    this.avatarURL = gravatar.url(email, { protocol: "http", size: "250" });
+  } catch (error) {
+    console.log(error.messages);
+  }
 };
 
 const User = model("user", user);

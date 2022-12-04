@@ -19,6 +19,7 @@ app.use(logger(formatsLogger));
 
 app.use(cors());
 app.use(express.json());
+
 app.use("/avatars", express.static("public/avatars"));
 
 app.use("/api/users", usersRouter);
@@ -30,7 +31,7 @@ app.use((_, res) => {
 
 app.use((err, _, res, __) => {
   const { status = 500, message = "internal server error!" } = err;
-  res.status(status).json({ message: message });
+  res.status(status).json({ message });
 });
 
 module.exports = app;
