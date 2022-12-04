@@ -15,10 +15,11 @@ app.set("query parser", function (str) {
 });
 
 const formatsLogger = app.get("env") === process.env.NODE_ENV ? "dev" : "short";
-
 app.use(logger(formatsLogger));
+
 app.use(cors());
 app.use(express.json());
+app.use("/avatars", express.static("public/avatars"));
 
 app.use("/api/users", usersRouter);
 app.use("/api/contacts", contactsRouter);
