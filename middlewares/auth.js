@@ -5,7 +5,7 @@ const { Unauthorized } = require("http-errors");
 const SECRET_KEY = process.env.SECRET_KEY;
 
 const auth = async (req, _, next) => {
-  const { authorization = "" } = req.headers.authorization;
+  const { authorization = "" } = req.headers;
   if (!authorization) throw new Unauthorized("Missing Bearer token");
 
   const [bearer, token] = authorization.split(" ");
@@ -13,7 +13,7 @@ const auth = async (req, _, next) => {
 
   try {
     const result = jwt.verify(token, SECRET_KEY);
-    const user = await User.findById(result.id, "email subscription");
+    const user = await User.findById(result.id);
     if (!user || !user.token) {
       throw new Unauthorized(`User by id ${result.id} not found!`);
     }
