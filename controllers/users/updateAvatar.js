@@ -1,24 +1,36 @@
 const { User } = require("../../models");
 const path = require("path");
 const fs = require("fs/promises");
+const Jimp = require("jimp");
 
-// Создай папку tmp в корне проекта и сохраняй в неё загруженную аватарку.
+const targetFolder = path.join(__dirname, "../../", "public", "avatars");
 
-// Обработай аватарку пакетом jimp и задай для нее размеры 250 на 250
+const updateAvatar = async (req, res, next) => {
+  const { path: temporaryName, originalname } = req.file;
 
-// Перенеси аватарку пользователя из папки tmp в папку public / avatars и дай ей уникальное
-// имя для конкретного пользователя.
+  await Jimp.read(temporaryName)
+    .then((image) => {
+      image.resize(Jimp.AUTO, 250, (_, image) => {
+        image.quality(90, (_, image) => {
+          image.write(temporaryName);
+        });
+      });
+    })
+    .catch((error) => {
+      next(error);
+    });
 
-// Полученный URL / avatars / <имя файла с расширением> сохрани в поле avatarURL пользователя
-
-const updateAvatar = async (req, res) => {
+  const { _id: id } = req.user;
+  const newName = id + "_" + originalname;
   try {
-    const { path: tempUpload, originalname } = req.file;
-    console.log(tempUpload);
-    console.log(originalname);
-  } catch (error) {}
-
-  res.status(201).json({ avatarURL: "тут будет ссылка на изображение" });
+    await fs.rename(temporaryName, path.join(targetFolder, newName));
+    const avatarURL = path.join("public", "avatars", newName);
+    await User.findByIdAndUpdate(id, { avatarURL });
+    res.json({ avatarURL });
+  } catch (error) {
+    await fs.unlink(temporaryName);
+    next(error);
+  }
 };
 
 module.exports = updateAvatar;
