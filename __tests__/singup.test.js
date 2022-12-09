@@ -1,16 +1,7 @@
 const express = require("express");
 const request = require("supertest");
-const {
-  describe,
-  beforeAll,
-  afterAll,
-  // beforeEach,
-  // afterEach,
-  test,
-  expect,
-} = require("@jest/globals");
-
-const { signup } = require("../controllers/users/");
+const { User } = require("../models/user");
+const { signup } = require("../controllers/users");
 
 const app = express();
 app.use(express.json());
@@ -25,21 +16,29 @@ const PORT = 3000;
 
 describe("test singup controller", () => {
   let server;
-
+  const testUser = { email: "test_jest@mail.ru", password: "12345" };
   beforeAll(() => (server = app.listen(PORT)));
 
   afterAll(() => server.close());
 
-  test("should return status code 201", async () => {
+  test("singup method test", async () => {
+    jest.spyOn(User, "findOne").mockImplementationOnce(() => {
+      return false;
+    });
+    jest.spyOn(User.prototype, "save").mockImplementationOnce(() => {
+      return true;
+    });
+
     const response = await request(app)
       .post("/signup")
       .set("Content-type", "application/json")
-      .send({ email: "test_jest@mail.ru", password: "12345" });
+      .send({ ...testUser });
 
     expect(response.status).toBe(201);
-    // expect(typeof response.body).toBe(typeof Object);
-    // expect.objectContaining({
-    //   user: { email: "test_jest@mail.ru", subscription: "starter" },
-    // });
-  }, 20000);
+    expect(typeof response.body).toBe("object");
+    expect.objectContaining({
+      user: { ...testUser },
+    });
+    expect(response.body.user.subscription).toBe("starter");
+  }, 10000);
 });
