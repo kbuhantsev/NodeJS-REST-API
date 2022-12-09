@@ -8,10 +8,6 @@ app.use(express.json());
 
 app.post("/signup", signup);
 
-// ответ должен иметь статус-код 200
-// в ответе должен возвращаться токен
-// в ответе должен возвращаться объект user с 2 полями email
-// и subscription, имеющие тип данных String
 const PORT = 3000;
 
 describe("test singup controller", () => {
