@@ -8,7 +8,8 @@ const { addUserSchema, patchSubscriptionSchema } = require("../../models/user");
 
 router
   .get("/logout", auth, ctrlWrapper(ctrl.logout))
-  .get("/current", auth, ctrlWrapper(ctrl.current));
+  .get("/current", auth, ctrlWrapper(ctrl.current))
+  .get("/verify/:verificationToken", ctrlWrapper(ctrl.verify));
 
 router
   .post("/signup", validator(addUserSchema), ctrlWrapper(ctrl.signup))

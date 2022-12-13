@@ -1,5 +1,7 @@
 const { User } = require("../../models/user");
-const { Conflict } = require("http-errors");
+const { Conflict, ServiceUnavailable } = require("http-errors");
+const { v4: uuidv4 } = require("uuid");
+const { metaSendEmail } = require("../../helpers");
 
 const signup = async (req, res) => {
   const { email, password } = req.body;
@@ -11,9 +13,37 @@ const signup = async (req, res) => {
   const newUser = new User({ email });
   newUser.setPassword(password);
   newUser.setDefaultAvatar(email);
+  newUser.verificationToken = uuidv4();
   await newUser.save();
+
+  const sended = metaSendEmail({
+    to: email,
+    subject: "Account confirmation",
+    html: `
+    <div>
+      <span>
+        Hello! Please confirm your email by this link:
+              <a href="${
+                req.protocol +
+                "//" +
+                req.host +
+                "/api/users/verify/" +
+                newUser.verificationToken
+              }">${email}</a>
+      </span>
+    </div>
+    `,
+  });
+
+  if (!sended) {
+    throw ServiceUnavailable("Error with sending email!");
+  }
+
   res.status(201).json({
-    user: { email: newUser.email, subscription: newUser.subscription },
+    user: {
+      email: newUser.email,
+      subscription: newUser.subscription,
+    },
   });
 };
 

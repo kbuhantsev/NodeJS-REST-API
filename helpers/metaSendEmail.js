@@ -15,14 +15,8 @@ const metaSendEmail = async (data) => {
   const transporter = nodemailer.createTransport(config);
   const emailOptions = { ...data, from: "k.buhantsev@meta.ua" };
 
-  // from: 'goitnodejs@meta.ua',
-  // to: 'noresponse@gmail.com',
-  // subject: 'Nodemailer test',
-  // text: 'Привет. Мы тестируем отправку писем!',
-
   try {
-    const info = await transporter.sendMail(emailOptions);
-    console.log(info);
+    await transporter.sendMail(emailOptions);
   } catch (error) {
     console.log(error);
     return false;
