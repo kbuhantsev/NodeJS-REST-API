@@ -29,6 +29,7 @@ app.use((_, res) => {
   res.status(404).json({ message: "Route not found!" });
 });
 
+// eslint-disable-next-line
 app.use((err, _, res, __) => {
   const { status = 500, message = "internal server error!" } = err;
   res.status(status).json({ message });
