@@ -80,8 +80,16 @@ const patchSubscriptionSchema = Joi.object({
     .required(),
 });
 
+const resendEmail = Joi.object({
+  email: Joi.string().pattern(emailRegexp).required().messages({
+    "any.required": "email is required!",
+    "string.pattern.base": "email {{email}} is not valid!",
+  }),
+});
+
 module.exports = {
   User,
   addUserSchema,
   patchSubscriptionSchema,
+  resendEmail,
 };

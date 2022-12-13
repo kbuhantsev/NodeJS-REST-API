@@ -4,7 +4,11 @@ const router = express.Router();
 const { users: ctrl } = require("../../controllers");
 
 const { ctrlWrapper, validator, auth, upload } = require("../../middlewares");
-const { addUserSchema, patchSubscriptionSchema } = require("../../models/user");
+const {
+  addUserSchema,
+  patchSubscriptionSchema,
+  resendEmail,
+} = require("../../models/user");
 
 router
   .get("/logout", auth, ctrlWrapper(ctrl.logout))
@@ -13,7 +17,8 @@ router
 
 router
   .post("/signup", validator(addUserSchema), ctrlWrapper(ctrl.signup))
-  .post("/login", validator(addUserSchema), ctrlWrapper(ctrl.login));
+  .post("/login", validator(addUserSchema), ctrlWrapper(ctrl.login))
+  .post("/verify", validator(resendEmail), ctrlWrapper(ctrl.resendEmail));
 
 router
   .patch(
