@@ -1,7 +1,7 @@
 const { User } = require("../../models/user");
 const { Conflict, ServiceUnavailable } = require("http-errors");
 const { v4: uuidv4 } = require("uuid");
-const { metaSendEmail } = require("../../helpers");
+const { metaSendEmail } = require("../../services");
 
 const signup = async (req, res) => {
   const { email, password } = req.body;

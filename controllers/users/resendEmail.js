@@ -1,6 +1,6 @@
 const { User } = require("../../models/user");
 const { NotFound, ServiceUnavailable, BadRequest } = require("http-errors");
-const { metaSendEmail } = require("../../helpers");
+const { metaSendEmail } = require("../../services");
 
 const resendEmail = async (req, res) => {
   const { email } = req.body;
