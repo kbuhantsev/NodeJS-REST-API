@@ -7,7 +7,10 @@ const deleteContact = async (req, res) => {
     _id: contactId,
   });
   if (deletedCount) {
-    res.json({ message: "contact deleted" });
+    res.json({
+      message: "contact deleted",
+      id: contactId,
+    });
   } else {
     throw NotFound(`Can not find contact with ID:${contactId}`);
   }

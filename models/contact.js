@@ -28,18 +28,26 @@ const contact = new Schema(
       required: true,
     },
   },
-  { versionKey: false, timestamps: true }
+  {
+    versionKey: false,
+    timestamps: true,
+    toJSON: { virtuals: true },
+  }
 );
+
+contact.virtual("id", {
+  id: this.id,
+});
 
 const Contact = model("contact", contact);
 
 const addContactSchema = Joi.object({
-  name: Joi.string().min(2).required(),
-  email: Joi.string().pattern(emailRegexp).required(),
+  name: Joi.string().min(2).required("Name is required"),
+  email: Joi.string().pattern(emailRegexp), // .required("Email is required"),
   phone: Joi.string()
     .pattern(phoneRegExp)
     .error(new Error("phone number is not valid!"))
-    .required(),
+    .required("Phone is required"),
   favorite: Joi.boolean().default(false),
 })
   .required()
