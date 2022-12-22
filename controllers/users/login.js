@@ -9,13 +9,13 @@ const login = async (req, res) => {
   const user = await User.findOne({ email });
   if (!user) {
     throw Unauthorized("Email is wrong");
-  }
-
-  if (!user.validPassword(password)) {
+  } else if (!user.verify) {
+    throw Unauthorized("User is not verified");
+  } else if (!user.validPassword(password)) {
     throw Unauthorized("Password is wrong");
   }
 
-  const token = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: "1d" });
+  const token = jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: "1d" });
 
   user.token = token;
   user.save();
@@ -23,8 +23,10 @@ const login = async (req, res) => {
   res.json({
     token,
     user: {
+      name: user.name,
       email: user.email,
       subscription: user.subscription,
+      avatarURL: user.avatarURL,
     },
   });
 };

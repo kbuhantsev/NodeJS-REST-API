@@ -8,10 +8,10 @@ const USER_SUBSCRIPTION = ["starter", "pro", "business"];
 
 const user = Schema(
   {
-    password: {
+    name: {
       type: String,
-      minlength: 5,
-      required: [true, "Password is required"],
+      minlength: 2,
+      required: [true, "Name is required"],
     },
     email: {
       type: String,
@@ -19,6 +19,12 @@ const user = Schema(
       match: emailRegexp,
       unique: true,
     },
+    password: {
+      type: String,
+      minlength: 5,
+      required: [true, "Password is required"],
+    },
+
     subscription: {
       type: String,
       enum: USER_SUBSCRIPTION,
@@ -63,12 +69,16 @@ user.methods.setDefaultAvatar = function (email) {
 const User = model("user", user);
 
 const addUserSchema = Joi.object({
-  password: Joi.string().min(5).required().messages({
-    "string.min": "password requires min 5 characters",
+  name: Joi.string().min(2).required().messages({
+    "any.required": "name is required!",
+    "string.min": "name requires min 5 characters",
   }),
   email: Joi.string().pattern(emailRegexp).required().messages({
     "any.required": "email is required!",
     "string.pattern.base": "email {{email}} is not valid!",
+  }),
+  password: Joi.string().min(5).required().messages({
+    "string.min": "password requires min 5 characters",
   }),
   subscription: Joi.string().valid(...USER_SUBSCRIPTION),
   token: Joi.string(),

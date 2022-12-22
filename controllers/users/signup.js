@@ -4,13 +4,14 @@ const { v4: uuidv4 } = require("uuid");
 const { metaSendEmail } = require("../../services");
 
 const signup = async (req, res) => {
-  const { email, password } = req.body;
+  const { name, email, password } = req.body;
+
   const user = await User.findOne({ email });
   if (user) {
     throw Conflict("Email in use");
   }
 
-  const newUser = new User({ email });
+  const newUser = new User({ name, email });
   newUser.setPassword(password);
   newUser.setDefaultAvatar(email);
   newUser.verificationToken = uuidv4();
@@ -22,14 +23,8 @@ const signup = async (req, res) => {
     html: `
     <div>
       <span>
-        Hello! Please confirm your email by this link:
-              <a href="${
-                req.protocol +
-                "//" +
-                req.host +
-                "/api/users/verify/" +
-                newUser.verificationToken
-              }">${email}</a>
+        Hello ${name}! Please confirm your email by this link:
+              <a href="${req.headers.origin}/goit-react-hw-08-phonebook/verify/${newUser.verificationToken}">${email}</a>
       </span>
     </div>
     `,
@@ -41,6 +36,7 @@ const signup = async (req, res) => {
 
   res.status(201).json({
     user: {
+      name: newUser.name,
       email: newUser.email,
       subscription: newUser.subscription,
     },

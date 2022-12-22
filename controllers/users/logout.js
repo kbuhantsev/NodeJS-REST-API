@@ -6,7 +6,7 @@ const logout = async (req, res) => {
     throw Unauthorized("Missing User in reques body!");
   }
 
-  const userId = req.user._id;
+  const userId = req.user.id;
   const user = await User.findByIdAndUpdate(userId, { token: null });
   if (!user) {
     throw new Unauthorized(`User by id ${userId} not found!`);
