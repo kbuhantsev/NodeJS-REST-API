@@ -68,6 +68,16 @@ user.methods.setDefaultAvatar = function (email) {
 
 const User = model("user", user);
 
+const loginUserSchema = Joi.object({
+  email: Joi.string().pattern(emailRegexp).required().messages({
+    "any.required": "email is required!",
+    "string.pattern.base": "email {{email}} is not valid!",
+  }),
+  password: Joi.string().min(5).required().messages({
+    "string.min": "password requires min 5 characters",
+  }),
+});
+
 const addUserSchema = Joi.object({
   name: Joi.string().min(2).required().messages({
     "any.required": "name is required!",
@@ -99,6 +109,7 @@ const resendEmail = Joi.object({
 
 module.exports = {
   User,
+  loginUserSchema,
   addUserSchema,
   patchSubscriptionSchema,
   resendEmail,

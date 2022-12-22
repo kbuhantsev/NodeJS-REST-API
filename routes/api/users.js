@@ -5,6 +5,7 @@ const { users: ctrl } = require("../../controllers");
 
 const { ctrlWrapper, validator, auth, upload } = require("../../middlewares");
 const {
+  loginUserSchema,
   addUserSchema,
   patchSubscriptionSchema,
   resendEmail,
@@ -17,7 +18,7 @@ router
 
 router
   .post("/signup", validator(addUserSchema), ctrlWrapper(ctrl.signup))
-  .post("/login", validator(addUserSchema), ctrlWrapper(ctrl.login))
+  .post("/login", validator(loginUserSchema), ctrlWrapper(ctrl.login))
   .post("/verify", validator(resendEmail), ctrlWrapper(ctrl.resendEmail));
 
 router
