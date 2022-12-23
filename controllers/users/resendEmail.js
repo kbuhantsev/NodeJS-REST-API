@@ -17,14 +17,8 @@ const resendEmail = async (req, res) => {
     html: `
     <div>
       <span>
-        Hello! Please confirm your email by this link:
-              <a href="${
-                req.protocol +
-                "//" +
-                req.host +
-                "/api/users/verify/" +
-                user.verificationToken
-              }">${email}</a>
+        Hello ${user.name}! Please confirm your email by this link:
+              <a href="${req.headers.origin}/goit-react-hw-08-phonebook/verify/${user.verificationToken}">${email}</a>
       </span>
     </div>
     `,
