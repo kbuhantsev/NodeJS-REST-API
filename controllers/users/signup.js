@@ -30,6 +30,10 @@ const signup = async (req, res) => {
     `,
   });
 
+  console.log(
+    `${req.headers.origin}/goit-react-hw-08-phonebook/verify/${newUser.verificationToken}`
+  );
+
   if (!sended) {
     throw ServiceUnavailable("Error with sending email!");
   }
