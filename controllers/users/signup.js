@@ -1,7 +1,8 @@
 const { User } = require("../../models/user");
-const { Conflict, ServiceUnavailable } = require("http-errors");
+const { Conflict } = require("http-errors");
 const { v4: uuidv4 } = require("uuid");
-const { metaSendEmail } = require("../../services");
+const jwt = require("jsonwebtoken");
+const { SECRET_KEY } = process.env;
 
 const signup = async (req, res) => {
   const { name, email, password } = req.body;
@@ -16,36 +17,18 @@ const signup = async (req, res) => {
   newUser.setDefaultAvatar(email);
   newUser.verificationToken = uuidv4();
 
-  console.log(
-    `${req.headers.origin}/goit-react-hw-08-phonebook/verify/${newUser.verificationToken}`
-  );
-
-  const result = await metaSendEmail({
-    to: email,
-    subject: "Account confirmation",
-    html: `
-    <div>
-      <span>
-        Hello ${name}! Please confirm your email by this link:
-              <a href="${req.headers.origin}/goit-react-hw-08-phonebook/verify/${newUser.verificationToken}">${email}</a>
-      </span>
-    </div>
-    `,
-  });
-
-  if (result === null) {
-    throw ServiceUnavailable("Error with sending email service!");
-  } else if (result.rejected.length) {
-    throw ServiceUnavailable(result.responce);
-  }
+  const token = jwt.sign({ id: newUser._id }, SECRET_KEY, { expiresIn: "1d" });
+  newUser.token = token;
 
   await newUser.save();
 
   res.status(201).json({
+    token: newUser.token,
     user: {
       name: newUser.name,
       email: newUser.email,
       subscription: newUser.subscription,
+      avatarURL: newUser.avatarURL,
     },
   });
 };
