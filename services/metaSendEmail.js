@@ -16,13 +16,12 @@ const metaSendEmail = async (data) => {
   const emailOptions = { ...data, from: "k.buhantsev@meta.ua" };
 
   try {
-    await transporter.sendMail(emailOptions);
+    const result = await transporter.sendMail(emailOptions);
+    return result;
   } catch (error) {
-    console.log(error);
-    return false;
+    console.log(error.message);
+    return { rejected: [null], responce: error.message };
   }
-
-  return true;
 };
 
 module.exports = metaSendEmail;

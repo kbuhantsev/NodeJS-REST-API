@@ -15,9 +15,12 @@ const signup = async (req, res) => {
   newUser.setPassword(password);
   newUser.setDefaultAvatar(email);
   newUser.verificationToken = uuidv4();
-  await newUser.save();
 
-  const sended = metaSendEmail({
+  console.log(
+    `${req.headers.origin}/goit-react-hw-08-phonebook/verify/${newUser.verificationToken}`
+  );
+
+  const result = await metaSendEmail({
     to: email,
     subject: "Account confirmation",
     html: `
@@ -30,13 +33,13 @@ const signup = async (req, res) => {
     `,
   });
 
-  console.log(
-    `${req.headers.origin}/goit-react-hw-08-phonebook/verify/${newUser.verificationToken}`
-  );
-
-  if (!sended) {
-    throw ServiceUnavailable("Error with sending email!");
+  if (result === null) {
+    throw ServiceUnavailable("Error with sending email service!");
+  } else if (result.rejected.length) {
+    throw ServiceUnavailable(result.responce);
   }
+
+  await newUser.save();
 
   res.status(201).json({
     user: {
