@@ -8,7 +8,7 @@ const contactById = async (req, res) => {
     contactId,
     "name email phone favorite",
     { owner: user._id }
-  );
+  ).populate("owner", ["name", "email"]);
   if (contact) {
     res.json(contact);
   } else {
